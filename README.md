@@ -12,4 +12,12 @@ Purpose: To showcase the ability to design, implement, and maintain a MongoDB-ba
 Routes:
 
 GET http://localhost:3999/customers/active
-Return arr of all customer documents where active = true
+Return  all customer documents where active = true
+GET http://localhost:3999/customers
+Return  all customers
+POST http://localhost:3999/customers/
+add new customer in req body
+Patch http://localhost:3999/customers/:id
+Update customer email, match on id, 
+DELETE  http://localhost:3999/transactions/:id
+delete transaction on id

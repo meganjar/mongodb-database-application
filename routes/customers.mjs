@@ -2,8 +2,16 @@ import express from "express";
 import { ObjectId } from "mongodb";
 import { connectToDatabase } from "../db/conn.mjs";
 import customers from "../models/customers.mjs";
+import e from "express";
 
 const router = express.Router();
+
+router.get("/active", async (req, res) => {
+  const db = await connectToDatabase();
+  const collection = db.collection("customers");
+  const allCustomers = await collection.find({}).toArray();
+  res.json(allCustomers);
+});
 
 router.get("/active", async (req, res) => {
   const db = await connectToDatabase();
@@ -13,29 +21,34 @@ router.get("/active", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const db = await connectToDatabase();
-  const collection = db.collection("transactions");
-  const result = await collection.insertOne(req.body);
-  res.json(result);
+  try {
+    const newCustomer = new Customers(req.body);
+    const result = await newCustomer.save();
+
+    res.status(201).json(result);
+  } catch (error) {
+    
+    res.status(400).json({ error: error.message });
+  }
 });
 
 router.patch("/:id", async (req, res) => {
+  try {
   const db = await connectToDatabase();
   const collection = db.collection("customers");
   const { id } = req.params;
+  const { email } = req.body;
   const result = await collection.updateOne(
     { _id: new ObjectId(id) },
-    { $set: req.body }
+    { $set: {email} }
   );
   res.json(result);
+} catch (error) {
+  console.error("Error updating email:", error);
+    res.status(500).json({ error: error.message });
+}
 });
 
-router.delete("/:id", async (req, res) => {
-  const db = await connectToDatabase();
-  const collection = db.collection("transactions");
-  const { id } = req.params;
-  const result = await collection.deleteOne({ _id: new ObjectId(id) });
-  res.json(result);
-});
+
 
 export default router;

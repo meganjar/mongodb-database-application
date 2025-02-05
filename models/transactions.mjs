@@ -1,5 +1,5 @@
 
-
+import mongoose from "mongoose";
 
 const transactionsSchema = new mongoose.Schema({
     _id: String,
@@ -11,4 +11,4 @@ const transactionsSchema = new mongoose.Schema({
     
     })
     
-    export default mongoose.model("transactions", transactionsSchemasSchema);
+    export default mongoose.model("transactions", transactionsSchema);
