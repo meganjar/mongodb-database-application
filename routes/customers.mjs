@@ -1,14 +1,15 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 import { connectToDatabase } from "../db/conn.mjs";
+import customers from "../models/customers.mjs";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/active", async (req, res) => {
   const db = await connectToDatabase();
-  const collection = db.collection("accounts");
-  const data = await collection.find().toArray();
-  res.json(data);
+  const collection = db.collection("customers");
+  const activeCustomers = await customers.findActive()
+  res.json(activeCustomers);
 });
 
 router.post("/", async (req, res) => {

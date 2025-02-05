@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 const customersSchema = new mongoose.Schema({
     _id:{
         required: false,
-        unique: true
+        unique: true,
+        type: String
     },
     username: {
         type: String,
@@ -22,10 +23,12 @@ const customersSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    active: boolean,
-    accounts: [number]
+    active: Boolean,
+    accounts: [Number]
     
     })
+
+    customersSchema.index({ active: 1 });
 
     customersSchema.statics.findActive = function () {
         return this.find({ active: true });

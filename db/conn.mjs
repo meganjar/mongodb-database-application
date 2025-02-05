@@ -1,17 +1,24 @@
 
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
-import mongoose from "mongoose";
-const client = new MongoClient(process.env.ATLAS_URI);
+
 let db;
 
 async function connectToDatabase() {
-  if (!db) {
-    await client.connect("expense");
-    db = client.db(); 
-    console.log("Connected to MongoDB!");
+  
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
   }
-  return db;
+
+
+  await mongoose.connect(process.env.ATLAS_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  console.log("Connected to MongoDB!");
+  
+
+  return mongoose.connection;
 }
 export { connectToDatabase };
